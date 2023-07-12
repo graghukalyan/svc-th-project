@@ -12,7 +12,7 @@ public class RequestController {
 
     @GetMapping("/messages")
     public String getMessage() {
-        return "Hello from Docker!";
+        return "Hello from Sample Project !";
     }
 
 }
