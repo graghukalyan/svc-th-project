@@ -1,8 +1,7 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name 'com.highnote.assignment.processor-service' is invalid and this project uses 'com.highnote.assignment.processor' instead.
-
+* The original package name 'com.highnote.assignment.processor-service' is invalid and this project uses 'com.highnote.assignment.processor' instead
 # Getting Started
 
 ### Reference Documentation
