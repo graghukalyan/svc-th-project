@@ -16,7 +16,9 @@ class RequestServiceHandlerTest {
     void testProcessor() {
         String[] inputFileLines = loadFileLines();
         RequestServiceHandler app = new RequestServiceHandler();
-        app.parseCommands(inputFileLines);
+        for (String inputCommand : inputFileLines) {
+            app.parseCommand(inputCommand);
+        }
         assertTrue(true);
     }
     private static String[] loadFileLines() {

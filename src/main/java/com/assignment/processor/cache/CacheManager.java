@@ -6,15 +6,16 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 @Component
 public class CacheManager {
 
-    static Logger logger = LoggerFactory.getLogger(CacheManager.class);
+    private final static Logger logger = LoggerFactory.getLogger(CacheManager.class);
 
-    public static Cache stagingCache = new Cache();
+    private static Cache stagingCache = new Cache();
 
-    public static Cache primaryCache = new Cache();
+    private static Cache primaryCache = new Cache();
 
     public static void createStagingCacheEntry(String key, String val) {
         logger.info (String.format("Create or Overwrite staging cache with key : %s  value : %s", key, val));
@@ -31,6 +32,7 @@ public class CacheManager {
     }
 
     public static boolean deleteCacheEntry(String key) {
+        //TO-DO : Change to Staging Cache
         return primaryCache.deleteCacheEntry(key);
     }
 
@@ -40,5 +42,14 @@ public class CacheManager {
 
     public static void clearStagingCache() {
         stagingCache.clear();
+    }
+
+    //TODO : Handle Bootup scenario for handling multiple requests
+    // & map UUID with empty staging cache
+    public static void initializeStagingCache() {
+
+        Map.of(UUID.randomUUID(),new Cache());
+//        stagingCache = new Cache();
+
     }
 }

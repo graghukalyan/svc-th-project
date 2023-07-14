@@ -1,11 +1,11 @@
-package com.assignment.processor.util;
+package com.assignment.processor.service.helper;
 
 import com.assignment.processor.cache.CacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DataModificationProcessorUtil {
-    static Logger logger = LoggerFactory.getLogger(DataModificationProcessorUtil.class);
+public class DataModificationHelper {
+    private final static Logger logger = LoggerFactory.getLogger(DataModificationHelper.class);
 
     public static void processPutRequest(String key, String value) {
 

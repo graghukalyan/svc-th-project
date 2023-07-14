@@ -1,6 +1,5 @@
 package com.assignment.processor.controller;
 
-import com.assignment.processor.contract.DataServerResponse;
 import com.assignment.processor.service.RequestServiceHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,19 +13,10 @@ public class RequestController {
     @Autowired
     RequestServiceHandler requestServiceHandler;
 
-    Logger logger = LoggerFactory.getLogger(RequestController.class);
+    private final static Logger logger = LoggerFactory.getLogger(RequestController.class);
 
     @GetMapping("/messages")
     public String getMessage() {
-        return "Hello from Sample Project !";
+        return "Hello from Take Home Project !";
     }
-
-    @GetMapping("/test")
-    public DataServerResponse getLogMessage() {
-        return requestServiceHandler.parseCommands(new String[] {"START",
-                "GET most_popular_leader",
-                "PUT georgew {\"first_name\":\"George\", \"last_name\":\"Washington\", \"role\":\"President\"}",
-                "COMMIT"});
-    }
-
 }

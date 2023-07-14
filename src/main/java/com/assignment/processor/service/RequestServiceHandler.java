@@ -1,8 +1,8 @@
 package com.assignment.processor.service;
 
 import com.assignment.processor.contract.DataServerResponse;
-import com.assignment.processor.util.DataModificationProcessorUtil;
-import com.assignment.processor.util.TransactionControlProcessorUtil;
+import com.assignment.processor.service.helper.DataModificationHelper;
+import com.assignment.processor.service.helper.TransactionControlHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RequestServiceHandler {
 
-    Logger logger = LoggerFactory.getLogger(RequestServiceHandler.class);
+    private final static Logger logger = LoggerFactory.getLogger(RequestServiceHandler.class);
 
 //    public DataServerResponse parseCommands(DataServerRequest dataServerRequest) {
 //
@@ -18,20 +18,21 @@ public class RequestServiceHandler {
 //
 //    }
 
-    public DataServerResponse parseCommands(String[] dataServerRequest) {
+    public DataServerResponse parseCommand(String dataServerRequest) {
 
-        System.out.println("Start Inputs:");
+        logger.info (String.format("Received Input command : %s", dataServerRequest));
 
-        for (String request : dataServerRequest) {
-            System.out.println("Server Request " + request);
+        if (dataServerRequest != null) {
 
             //TO-DO : Clear this step
-            if (request.equals("START") || request.equals("COMMIT") || request.equals("ROLLBACK")) {
-                parseTransactionCommand(request);
-                continue;
+            if (dataServerRequest.equalsIgnoreCase("START") ||
+                    dataServerRequest.equalsIgnoreCase("COMMIT") ||
+                    dataServerRequest.equalsIgnoreCase("ROLLBACK")) {
+                logger.info ("Received transaction command & proceeding to process command");
+                parseTransactionCommand(dataServerRequest);
+            } else {
+                parseDataModificationCommand(dataServerRequest);
             }
-            parseDataModificationCommand(request);
-
         }
         return DataServerResponse.builder().build();
     }
@@ -43,20 +44,20 @@ public class RequestServiceHandler {
         switch (modificationCommand[0]) {
 
             case "PUT":
-                System.out.println("Processing PUT request");
+                logger.info ("Processing PUT request");
                 String[] putKVPair = modificationCommand[1].split("\\s+",2);
 
-                DataModificationProcessorUtil.processPutRequest(putKVPair[0], putKVPair[1]);
+                DataModificationHelper.processPutRequest(putKVPair[0], putKVPair[1]);
                 break;
 
             case "GET":
-                System.out.println("Processing GET request");
-                DataModificationProcessorUtil.processGetRequest(modificationCommand[1]);
+                logger.info("Processing GET request");
+                DataModificationHelper.processGetRequest(modificationCommand[1]);
                 break;
 
             case "DEL":
-                System.out.println("Processing DEL request");
-                DataModificationProcessorUtil.processDeleteRequest(modificationCommand[1]);
+                logger.info("Processing DEL request");
+                DataModificationHelper.processDeleteRequest(modificationCommand[1]);
                 break;
 
             default:
@@ -70,17 +71,18 @@ public class RequestServiceHandler {
         switch (transactionCommand) {
 
             case "COMMIT":
-                System.out.println("Processing COMMIT");
-                TransactionControlProcessorUtil.processTransactionCommit();
+                logger.info("Processing COMMIT");
+                TransactionControlHelper.processTransactionCommit();
                 break;
 
             case "ROLLBACK":
-                System.out.println("Processing Rollback");
-                TransactionControlProcessorUtil.processTransactionRollback();
+                logger.info("Processing Rollback");
+                TransactionControlHelper.processTransactionRollback();
                 break;
 
             case "START":
-                System.out.println("Processing START");
+                logger.info("Processing START");
+                TransactionControlHelper.processTransactionStart();
                 break;
 
             default:

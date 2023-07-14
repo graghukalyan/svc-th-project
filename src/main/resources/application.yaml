@@ -9,5 +9,8 @@ logging:
   file: dataServer.log
 
 spring:
+  application:
+    server:
+      port: 5555
   profiles:
     active: dev

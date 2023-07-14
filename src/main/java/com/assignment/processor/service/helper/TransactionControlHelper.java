@@ -1,4 +1,4 @@
-package com.assignment.processor.util;
+package com.assignment.processor.service.helper;
 
 import com.assignment.processor.cache.CacheManager;
 import org.slf4j.Logger;
@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TransactionControlProcessorUtil {
-    static Logger logger = LoggerFactory.getLogger(TransactionControlProcessorUtil.class);
+public class TransactionControlHelper {
+    private final static Logger logger = LoggerFactory.getLogger(TransactionControlHelper.class);
 
     public static boolean processTransactionCommit() {
 
@@ -40,6 +40,10 @@ public class TransactionControlProcessorUtil {
         return true;
     }
 
+    //ToDO : Make it request specific & tie it to RequestUUID or CorrelationID
+    public static void processTransactionStart() {
+        CacheManager.initializeStagingCache();
+    }
 }
 
 
