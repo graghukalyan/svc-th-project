@@ -14,7 +14,10 @@ public class TransactionControlHelper {
         logger.info ("Starting transaction commit workflow for the request");
         CacheManager.retrieveStagingCacheEntries().forEach(e -> {
             try {
-                CacheManager.createPrimaryCacheEntry(e.getKey(), e.getValue());
+                e.getValue().ifPresentOrElse( (value)
+                        -> { CacheManager.createPrimaryCacheEntry(e.getKey(), value); },
+                        () -> { CacheManager.deleteCacheEntry(e.getKey()); }
+                );
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }

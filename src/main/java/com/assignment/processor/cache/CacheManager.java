@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -27,16 +28,19 @@ public class CacheManager {
         primaryCache.createCacheEntry(key, val);
     }
 
-    public static String getCacheEntry(String key) {
+    public static Optional<String> getCacheEntry(String key) {
         return primaryCache.getEntry(key);
     }
 
+    public static boolean markForDelete(String key) {
+        return stagingCache.markCacheEntryForDelete(key);
+    }
+
     public static boolean deleteCacheEntry(String key) {
-        //TO-DO : Change to Staging Cache
         return primaryCache.deleteCacheEntry(key);
     }
 
-    public static Set<Map.Entry<String, String>> retrieveStagingCacheEntries() {
+    public static Set<Map.Entry<String, Optional<String>>> retrieveStagingCacheEntries() {
         return stagingCache.returnCacheEntries();
     }
 
