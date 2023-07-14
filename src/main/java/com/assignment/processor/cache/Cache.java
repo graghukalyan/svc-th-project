@@ -3,7 +3,9 @@ package com.assignment.processor.cache;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -16,7 +18,7 @@ public class Cache {
     }
 
     public String getEntry(String key) {
-        return createCacheEntry(key);
+        return map.get(key);
     }
 
     private String createCacheEntry(String key) {
@@ -43,4 +45,13 @@ public class Cache {
             throw new NoSuchElementException("Requested Key doesn't exist");
         }
     }
+
+    public Set<Map.Entry<String, String>> returnCacheEntries() {
+        return map.entrySet();
+    }
+
+    public void clear() {
+        map.clear();
+    }
+
 }

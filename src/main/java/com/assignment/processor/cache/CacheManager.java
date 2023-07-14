@@ -4,6 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+import java.util.Set;
+
 @Component
 public class CacheManager {
 
@@ -19,6 +22,7 @@ public class CacheManager {
     }
 
     public static void createPrimaryCacheEntry(String key, String val) {
+        logger.info (String.format("Create or Overwrite primary cache with key : %s  value : %s", key, val));
         primaryCache.createCacheEntry(key, val);
     }
 
@@ -28,5 +32,13 @@ public class CacheManager {
 
     public static boolean deleteCacheEntry(String key) {
         return primaryCache.deleteCacheEntry(key);
+    }
+
+    public static Set<Map.Entry<String, String>> retrieveStagingCacheEntries() {
+        return stagingCache.returnCacheEntries();
+    }
+
+    public static void clearStagingCache() {
+        stagingCache.clear();
     }
 }

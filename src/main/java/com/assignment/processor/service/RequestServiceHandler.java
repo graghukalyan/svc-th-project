@@ -1,7 +1,8 @@
 package com.assignment.processor.service;
 
 import com.assignment.processor.contract.DataServerResponse;
-import com.assignment.processor.util.ProcessorUtil;
+import com.assignment.processor.util.DataModificationProcessorUtil;
+import com.assignment.processor.util.TransactionControlProcessorUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,8 @@ public class RequestServiceHandler {
             System.out.println("Server Request " + request);
 
             //TO-DO : Clear this step
-            if (request.equals("START")) {
+            if (request.equals("START") || request.equals("COMMIT") || request.equals("ROLLBACK")) {
+                parseTransactionCommand(request);
                 continue;
             }
             parseDataModificationCommand(request);
@@ -44,17 +46,17 @@ public class RequestServiceHandler {
                 System.out.println("Processing PUT request");
                 String[] putKVPair = modificationCommand[1].split("\\s+",2);
 
-                ProcessorUtil.processPutRequest(putKVPair[0], putKVPair[1]);
+                DataModificationProcessorUtil.processPutRequest(putKVPair[0], putKVPair[1]);
                 break;
 
             case "GET":
                 System.out.println("Processing GET request");
-                ProcessorUtil.processGetRequest(modificationCommand[1]);
+                DataModificationProcessorUtil.processGetRequest(modificationCommand[1]);
                 break;
 
             case "DEL":
                 System.out.println("Processing DEL request");
-                ProcessorUtil.processDeleteRequest(modificationCommand[1]);
+                DataModificationProcessorUtil.processDeleteRequest(modificationCommand[1]);
                 break;
 
             default:
@@ -63,5 +65,27 @@ public class RequestServiceHandler {
 
     }
 
+    private void parseTransactionCommand(String transactionCommand) {
 
+        switch (transactionCommand) {
+
+            case "COMMIT":
+                System.out.println("Processing COMMIT");
+                TransactionControlProcessorUtil.processTransactionCommit();
+                break;
+
+            case "ROLLBACK":
+                System.out.println("Processing Rollback");
+                TransactionControlProcessorUtil.processTransactionRollback();
+                break;
+
+            case "START":
+                System.out.println("Processing START");
+                break;
+
+            default:
+                throw new IllegalArgumentException("Unexpected TransactionControl Command: " + transactionCommand);
+        }
+
+    }
 }
