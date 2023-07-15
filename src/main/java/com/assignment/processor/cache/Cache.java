@@ -19,7 +19,7 @@ public class Cache {
     }
 
     public Optional<String> getEntry(String key) {
-        return map.get(key);
+        return (map.get(key) != null) ? map.get(key) : Optional.empty();
     }
 
 //    private String createCacheEntry(String key) {

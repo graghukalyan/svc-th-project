@@ -33,10 +33,20 @@ public class RequestServiceHandler {
     }
 
     private DataServerResponse generateResponse(String responseMessage) {
+
+        if ("NOT_FOUND".equals(responseMessage)) {
+            return DataServerResponse.builder().status("ERROR").
+                    message("Unable to find requested value")
+                    .build();
+        }
         //Handling GET response as a special case
-        if ((responseMessage != "OK") && (responseMessage != "ERROR")) {
+        else if (!("OK".equals(responseMessage)) && !("ERROR".equals(responseMessage))) {
             return DataServerResponse.builder().status("OK").
                     result(responseMessage)
+                    .build();
+        } else if ("ERROR".equals(responseMessage)) {
+            return DataServerResponse.builder().status("ERROR").
+                    message("Unexpected issue encountered")
                     .build();
         }
         return DataServerResponse.builder().status("OK")
@@ -47,7 +57,7 @@ public class RequestServiceHandler {
 
         String[] modificationCommand = request.split("\\s+",2);
 
-    String output = switch (modificationCommand[0]) {
+        return switch (modificationCommand[0]) {
 
             case "PUT" -> {
                 logger.info("Processing PUT request");
@@ -70,7 +80,6 @@ public class RequestServiceHandler {
             default -> throw new IllegalArgumentException("Unexpected DataModification Command: " + modificationCommand[0]);
         };
 
-        return output;
     }
 
     private void parseTransactionCommand(String transactionCommand) {

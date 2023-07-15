@@ -24,9 +24,7 @@ public class DataModificationHelper {
 
     public static String processGetRequest(String key) {
         logger.info (String.format("Looking up entries for key : %s",key));
-        return (CacheManager.getCacheEntry(key) != null) ?
-                CacheManager.getCacheEntry(key).get() :
-                HttpStatus.NOT_FOUND.name();
+        return CacheManager.getCacheEntry(key).orElse(HttpStatus.NOT_FOUND.name());
     }
 
     public static String processDeleteRequest(String key) {
