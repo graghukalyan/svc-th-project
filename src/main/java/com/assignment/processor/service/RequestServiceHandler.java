@@ -5,65 +5,72 @@ import com.assignment.processor.service.helper.DataModificationHelper;
 import com.assignment.processor.service.helper.TransactionControlHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+import java.util.Optional;
+
+@Component
 public class RequestServiceHandler {
 
     private final static Logger logger = LoggerFactory.getLogger(RequestServiceHandler.class);
 
-//    public DataServerResponse parseCommands(DataServerRequest dataServerRequest) {
-//
-//        return  null;
-//
-//    }
-
-    public DataServerResponse parseCommand(String dataServerRequest) {
+    public Optional<DataServerResponse> parseCommand(String dataServerRequest) {
 
         logger.info (String.format("Received Input command : %s", dataServerRequest));
 
         if (dataServerRequest != null) {
 
-            //TO-DO : Clear this step
             if (dataServerRequest.equalsIgnoreCase("START") ||
                     dataServerRequest.equalsIgnoreCase("COMMIT") ||
                     dataServerRequest.equalsIgnoreCase("ROLLBACK")) {
                 logger.info ("Received transaction command & proceeding to process command");
                 parseTransactionCommand(dataServerRequest);
             } else {
-                parseDataModificationCommand(dataServerRequest);
+                return Optional.of(generateResponse(parseDataModificationCommand(dataServerRequest)));
             }
         }
-        return DataServerResponse.builder().build();
+        return Optional.empty();
     }
 
-    private void parseDataModificationCommand(String request) {
+    private DataServerResponse generateResponse(String responseMessage) {
+        //Handling GET response as a special case
+        if ((responseMessage != "OK") && (responseMessage != "ERROR")) {
+            return DataServerResponse.builder().status("OK").
+                    result(responseMessage)
+                    .build();
+        }
+        return DataServerResponse.builder().status("OK")
+                .build();
+    }
+
+    private String parseDataModificationCommand(String request) {
 
         String[] modificationCommand = request.split("\\s+",2);
 
-        switch (modificationCommand[0]) {
+    String output = switch (modificationCommand[0]) {
 
-            case "PUT":
-                logger.info ("Processing PUT request");
-                String[] putKVPair = modificationCommand[1].split("\\s+",2);
+            case "PUT" -> {
+                logger.info("Processing PUT request");
+                String[] putKVPair = modificationCommand[1].split("\\s+", 2);
+                yield DataModificationHelper.processPutRequest(putKVPair[0], putKVPair[1]);
+            }
 
-                DataModificationHelper.processPutRequest(putKVPair[0], putKVPair[1]);
-                break;
+            case "GET" -> {
 
-            case "GET":
                 logger.info("Processing GET request");
-                DataModificationHelper.processGetRequest(modificationCommand[1]);
-                break;
+                yield DataModificationHelper.processGetRequest(modificationCommand[1]);
+            }
 
-            case "DEL":
+            case "DEL" -> {
+
                 logger.info("Processing DEL request");
-                DataModificationHelper.processDeleteRequest(modificationCommand[1]);
-                break;
+                yield DataModificationHelper.processDeleteRequest(modificationCommand[1]);
+            }
 
-            default:
-                throw new IllegalArgumentException("Unexpected DataModification Command: " + modificationCommand[0]);
-        }
+            default -> throw new IllegalArgumentException("Unexpected DataModification Command: " + modificationCommand[0]);
+        };
 
+        return output;
     }
 
     private void parseTransactionCommand(String transactionCommand) {

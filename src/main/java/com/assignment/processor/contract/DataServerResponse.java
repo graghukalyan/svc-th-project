@@ -1,21 +1,21 @@
 package com.assignment.processor.contract;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Optional;
-
 @Builder
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DataServerResponse {
 
     String status;
 
-    Optional<String> result;
+    String result;
 
-    Optional<String> message;
+    String message;
 
 }
