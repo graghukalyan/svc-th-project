@@ -4,10 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class CacheManager {
@@ -46,8 +43,9 @@ public class CacheManager {
     }
 
     public Set<Map.Entry<String, Optional<String>>> retrieveStagingCacheEntries() {
-
-        return stagingCacheContainer.get(fetchThreadUniqueKey()).returnCacheEntries();
+        return (stagingCacheContainer.get(fetchThreadUniqueKey()) != null) ?
+        stagingCacheContainer.get(fetchThreadUniqueKey()).returnCacheEntries() :
+        Collections.emptySet();
     }
 
     public void clearStagingCache() {
@@ -55,8 +53,6 @@ public class CacheManager {
         stagingCacheContainer.remove(fetchThreadUniqueKey());
     }
 
-    //TODO : Handle Bootup scenario for handling multiple requests
-    // & map UUID with empty staging cache
     public void initializeStagingCache() {
 
         String key = fetchThreadUniqueKey();
@@ -64,7 +60,7 @@ public class CacheManager {
         stagingCacheContainer.put(key, new Cache());
     }
 
-    private static String fetchThreadUniqueKey() {
+    public static String fetchThreadUniqueKey() {
 
         return Thread.currentThread().getName() + "-" + Thread.currentThread().getId();
     }

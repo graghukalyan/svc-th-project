@@ -22,13 +22,10 @@ public class ServerController {
 
     private final static Logger logger = LoggerFactory.getLogger(ServerController.class);
 
-//    @Value("${spring.application.server.port}")
-//    private Integer serverPort;
-
-    private ServerSocket serverSocket;
+    protected ServerSocket serverSocket;
 
     @Autowired
-    private RequestServiceHandler requestServiceHandler;
+    protected RequestServiceHandler requestServiceHandler;
 
     public void start(int serverPort) throws IOException {
         serverSocket = new ServerSocket(serverPort);
@@ -44,7 +41,7 @@ public class ServerController {
         }
     }
 
-    private class ServerHandler extends Thread {
+    public class ServerHandler extends Thread {
         private Socket clientSocket;
         private PrintWriter out;
         private BufferedReader in;

@@ -14,9 +14,9 @@ public class ServerClient {
 
     private final static Logger logger = LoggerFactory.getLogger(ServerClient.class);
 
-    private Socket clientSocket;
-    private PrintWriter out;
-    private BufferedReader in;
+    protected Socket clientSocket;
+    protected PrintWriter out;
+    protected BufferedReader in;
 
     public void startConnection(String ip, int port) {
         try {

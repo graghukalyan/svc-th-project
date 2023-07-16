@@ -13,8 +13,8 @@ public class DataModificationHelper {
     @Autowired
     CacheManager cacheManager;
     private final static Logger logger = LoggerFactory.getLogger(DataModificationHelper.class);
-    private final static String STATUS_OK = "OK";
-    private final static String STATUS_ERROR = "ERROR";
+    public final static String STATUS_OK = "OK";
+    public final static String STATUS_ERROR = "ERROR";
 
 
     public String processPutRequest(String key, String value) {
