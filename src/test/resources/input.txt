@@ -1,0 +1,11 @@
+START
+GET most_popular_leader
+PUT georgew {"first_name":"George", "last_name":"Washington", "role":"President"}
+PUT winstonc {"first_name":"Winston", "last_name":"Churchill", "role":"Prime Minister"}
+COMMIT
+START
+DEL georgew
+COMMIT
+START
+DEL winstonc
+ROLLBACK
