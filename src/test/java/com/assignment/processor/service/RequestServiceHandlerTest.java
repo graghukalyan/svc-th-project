@@ -1,6 +1,8 @@
 package com.assignment.processor.service;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -12,10 +14,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 // Test Class
 class RequestServiceHandlerTest {
+
     @Test
     void testProcessor() {
+
+        ApplicationContext context
+                = new AnnotationConfigApplicationContext(RequestServiceHandler.class);
+        RequestServiceHandler app = context.getBean(RequestServiceHandler.class);
+//      RequestServiceHandler app = new RequestServiceHandler();
         String[] inputFileLines = loadFileLines();
-        RequestServiceHandler app = new RequestServiceHandler();
+
         for (String inputCommand : inputFileLines) {
             app.parseCommand(inputCommand);
         }

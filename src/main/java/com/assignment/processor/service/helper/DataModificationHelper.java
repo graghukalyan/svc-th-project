@@ -3,18 +3,24 @@ package com.assignment.processor.service.helper;
 import com.assignment.processor.cache.CacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DataModificationHelper {
+
+    @Autowired
+    CacheManager cacheManager;
     private final static Logger logger = LoggerFactory.getLogger(DataModificationHelper.class);
     private final static String STATUS_OK = "OK";
     private final static String STATUS_ERROR = "ERROR";
 
 
-    public static String processPutRequest(String key, String value) {
+    public String processPutRequest(String key, String value) {
         try {
             logger.info (String.format("Create or Overwrite entry with key : %s value : %s",key, value));
-            CacheManager.createStagingCacheEntry(key, value);
+            cacheManager.createStagingCacheEntry(key, value);
             return STATUS_OK;
         } catch (Exception e) {
             logger.error(String.format("Error encountered while creating or overwriting key : %s", key), e.getCause());
@@ -27,10 +33,10 @@ public class DataModificationHelper {
         return CacheManager.getCacheEntry(key).orElse(HttpStatus.NOT_FOUND.name());
     }
 
-    public static String processDeleteRequest(String key) {
+    public String processDeleteRequest(String key) {
         try {
             logger.info (String.format("Looking to delete entry with key : %s",key));
-            CacheManager.markForDelete(key);
+            cacheManager.markForDelete(key);
             return STATUS_OK;
         } catch (Exception e) {
             logger.error(String.format("Error encountered while deleting key : %s", key), e.getCause());

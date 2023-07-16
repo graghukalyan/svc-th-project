@@ -5,13 +5,19 @@ import com.assignment.processor.service.helper.DataModificationHelper;
 import com.assignment.processor.service.helper.TransactionControlHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+@ComponentScan(basePackages = "com.assignment.processor")
 @Component
 public class RequestServiceHandler {
-
+    @Autowired
+    private DataModificationHelper dataModificationHelper;
+    @Autowired
+    private TransactionControlHelper transactionControlHelper;
     private final static Logger logger = LoggerFactory.getLogger(RequestServiceHandler.class);
 
     public Optional<DataServerResponse> parseCommand(String dataServerRequest) {
@@ -62,7 +68,7 @@ public class RequestServiceHandler {
             case "PUT" -> {
                 logger.info("Processing PUT request");
                 String[] putKVPair = modificationCommand[1].split("\\s+", 2);
-                yield DataModificationHelper.processPutRequest(putKVPair[0], putKVPair[1]);
+                yield dataModificationHelper.processPutRequest(putKVPair[0], putKVPair[1]);
             }
 
             case "GET" -> {
@@ -74,7 +80,7 @@ public class RequestServiceHandler {
             case "DEL" -> {
 
                 logger.info("Processing DEL request");
-                yield DataModificationHelper.processDeleteRequest(modificationCommand[1]);
+                yield dataModificationHelper.processDeleteRequest(modificationCommand[1]);
             }
 
             default -> throw new IllegalArgumentException("Unexpected DataModification Command: " + modificationCommand[0]);
@@ -88,17 +94,17 @@ public class RequestServiceHandler {
 
             case "COMMIT":
                 logger.info("Processing COMMIT");
-                TransactionControlHelper.processTransactionCommit();
+                transactionControlHelper.processTransactionCommit();
                 break;
 
             case "ROLLBACK":
                 logger.info("Processing Rollback");
-                TransactionControlHelper.processTransactionRollback();
+                transactionControlHelper.processTransactionRollback();
                 break;
 
             case "START":
                 logger.info("Processing START");
-                TransactionControlHelper.processTransactionStart();
+                transactionControlHelper.processTransactionStart();
                 break;
 
             default:

@@ -34,13 +34,13 @@ public class Cache {
 //    }
 
     public void createCacheEntry(String key, String val) {
-        map.putIfAbsent(key, Optional.of(val));
+        map.put(key, Optional.of(val));
     }
 
     @SneakyThrows(NoSuchElementException.class)
     public boolean deleteCacheEntry(String key) {
         Optional<String> val = getEntry(key);
-        if (val != null) {
+        if (val.isPresent()) {
             return map.remove(key,val);
         } else {
             throw new NoSuchElementException("Requested Key doesn't exist");

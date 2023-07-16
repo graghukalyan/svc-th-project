@@ -3,16 +3,20 @@ package com.assignment.processor.service.helper;
 import com.assignment.processor.cache.CacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TransactionControlHelper {
+
+    @Autowired
+    CacheManager cacheManager;
     private final static Logger logger = LoggerFactory.getLogger(TransactionControlHelper.class);
 
-    public static boolean processTransactionCommit() {
+    public boolean processTransactionCommit() {
 
         logger.info ("Starting transaction commit workflow for the request");
-        CacheManager.retrieveStagingCacheEntries().forEach(e -> {
+        cacheManager.retrieveStagingCacheEntries().forEach(e -> {
             try {
                 e.getValue().ifPresentOrElse( (value)
                         -> { CacheManager.createPrimaryCacheEntry(e.getKey(), value); },
@@ -24,17 +28,17 @@ public class TransactionControlHelper {
         });
         logger.info (" Transaction commit successful ");
 
-        CacheManager.clearStagingCache();
+        cacheManager.clearStagingCache();
         logger.info (" Staging cache cleared ");
         return true;
     }
 
-    public static boolean processTransactionRollback() {
+    public boolean processTransactionRollback() {
 
         logger.info (" Starting transaction rollout workflow for the request. " +
                 "Clearing staging cache without committing to the primary cache ");
         try {
-            CacheManager.clearStagingCache();
+            cacheManager.clearStagingCache();
         } catch (Exception e) {
             throw new RuntimeException("Transaction rollback failed", e.getCause());
         }
@@ -44,8 +48,9 @@ public class TransactionControlHelper {
     }
 
     //ToDO : Make it request specific & tie it to RequestUUID or CorrelationID
-    public static void processTransactionStart() {
-        CacheManager.initializeStagingCache();
+    public void processTransactionStart() {
+
+        cacheManager.initializeStagingCache();
     }
 }
 

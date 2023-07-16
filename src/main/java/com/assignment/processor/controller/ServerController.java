@@ -75,16 +75,14 @@ public class ServerController {
                                     throw new RuntimeException(e);
                                 }
                             },
-                            () -> { out.println("done"); }
+                            () -> {out.println("done"); }
                     );
-//                  out.println(inputCommand);
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
 
             try {
-
                 in.close();
                 out.close();
                 clientSocket.close();
