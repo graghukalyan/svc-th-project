@@ -42,24 +42,11 @@ Java 15
    - Goto https://jdk.java.net/archive/
    - Look for Release 15 (15.0.2, 15.0.1, 15 GA)
    - Download & Install based on your underlying OS
+   - Set/Update JAVA_HOME environment variable to point to the above JDK's home folder 
 
 ```
 
-```
-Gradle 6.7.1
-
-   - Goto the release page https://services.gradle.org/distributions/gradle-6.7.1-bin.zip
-   - If you are a Linux & MacOS user, 
-unzip the distribution zip file in the directory of your choosing, e.g.:
-      $ mkdir /opt/gradle
-      $ unzip -d /opt/gradle gradle-6.7.1-bin.zip
-      $ ls /opt/gradle/gradle-6.7.1
-
-   - Alternatively if you are a Windows user, you can unpack the Gradle distribution ZIP file into C:\Gradle or another directory of your choice.
-
-```
-
-Configure your system environment to include **bin** directory of the gradle & java distributions in the PATH variable
+Configure your system environment to include **bin** directory of the gradle & java home distributions in the PATH variable
 
 
 
