@@ -69,20 +69,23 @@ Go to the project directory
 Build the project
 
 ```bash
-  
+  ./gradlew clean build
 
 ```
 
 Start one instance of project as _SERVER_
-
+Go to build/libs directory after successfully building the project. In the Terminal/Command Line tool, Run the following command which starts the Server component of the application
 ```bash
-  
+
+  java -cp processor-service-1.0.jar -Dloader.main=com.assignment.processor.controller.ServerController org.springframework.boot.loader.PropertiesLauncher
+
 ```
 
 Start one (or more) instances of project as _CLIENT_
-
+ Open a new tab & Run the following command in the Terminal/Command Line tool to start the Client part of the application. In order to start multiple clients, open subsequent Terminal tabs and run the following command again 
 ```bash
-  
+java -cp processor-service-1.0.jar -Dloader.main=com.assignment.processor.client.ServerClient org.springframework.boot.loader.PropertiesLauncher
+
 ```
 
 ## Appendix
